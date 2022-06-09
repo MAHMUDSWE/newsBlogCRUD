@@ -11,53 +11,61 @@ const getSignUpPage = (req, res) => {
 const postUserSignUp = async (req, res) => {
 
     try {
-        
-    let { name, email, username } = req.body;
 
-    const password = await bcrypt.hash(req.body.password, 10);
+        let { name, email, username } = req.body;
 
-    var userid = uuidv4();
+        const password = await bcrypt.hash(req.body.password, 10);
 
-    function isRegistered(callback) {
+        var userid = uuidv4();
 
-        (function checkEmail() {
-            var query = "select email, username from tbl_user where email = ? or username = ?";
+        function isRegistered(callback) {
 
-            db.query(query, [email, username], (err, results) => {
+            var query = "select email from tbl_user where email = ? ";
 
-                if(err){
-                    console.log(err);
-                }
-                else if (results.length >= 1) {
+            db.query(query, [email], (err, results) => {
+
+                if (results.length == 1) {
                     res.status(300).json({
-                        message: `User with email ${email} is already registered or Username taken`,
-                    });                 
+                        message: `User with email ${email} is already registered`,
+                    });
                 }
                 else {
-                    callback();
+                    var query = "select username from tbl_user where username = ? ";
+
+                    db.query(query, [username], (err, results) => {
+
+                        if (results.length == 1) {
+                            res.status(300).json({
+                                message: `username ${username} is not available`,
+                            });
+                        }
+                        else {
+                            callback();
+                        }
+
+                    });
                 }
             });
-        })();
-    };
+        };
 
-    isRegistered(callback);
+        isRegistered(callback);
 
-    function callback() {
-        var query = "insert into tbl_user values (?, ?, ?, ?, ?)";
-        db.query(query, [userid, name, email, username, password], (err, results) => {
-            if (!err) {
-                res.status(200).json({
-                    success: `Registration successful for ${name}`,
-                    results
-                });
-            }
-            else {
-                console.log(err);
-            }
-        });
-    }
+        function callback() {
+            var query = "insert into tbl_user values (?, ?, ?, ?, ?)";
+            db.query(query, [userid, name, email, username, password], (err, results) => {
+                if (!err) {
+                    res.status(200).json({
+                        success: `Registration successful for ${name}`,
+                        results
+                    });
+                }
+                else {
+                    console.log(err);
+                }
+            });
+        }
     } catch (error) {
-        console.log("Registration Failed \n Error: "+ error);
+        console.log("Registration Failed \n Error: " + error);
     }
 
 };
