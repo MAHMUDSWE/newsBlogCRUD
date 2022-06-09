@@ -7,13 +7,15 @@ const getLogInPage = (req, res) => {
 }
 
 const postUserLogin = (req, res) => {
+
     const username = req.body.username;
     const password = req.body.password;
 
-    let query = "select password from tbl_user where username = ?";
+    let query = "select password from tbl_user where username = ? ";
 
     db.query(query, [username], (err, results) => {
-        if (!err) {
+
+        if (results.length == 1) {
 
             hash = results[0].password;
 
@@ -31,14 +33,16 @@ const postUserLogin = (req, res) => {
 
                 else {
                     res.status(300).json({
-                        message: "Wrong Password"
+                        message: "log in failed! Invalid username or password."
                     });
                 }
 
             });
         }
         else {
-            console.log(err);
+            res.status(401).json({
+                message: "log in failed! Invalid username or password."
+            });
         }
     });
 
