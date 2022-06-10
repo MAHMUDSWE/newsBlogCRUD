@@ -25,7 +25,7 @@ app.use(blogpostRoute);
 
 app.use((req, res, next) => {
     res.status(404).json({
-        message: "Error! Page not found",
+        "message": "Error! Page not found",
     });
 });
 

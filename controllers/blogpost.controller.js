@@ -7,8 +7,11 @@ const getBlogPostPage = (req, res) =>{
 };
 
 const postBlogPost = (req, res) => {
+
     var blogid = uuidv4();
+
     var userid = req.userid;
+
     var { title, content } = req.body;
     var status = "published";
     var createtime = new Date();
@@ -87,22 +90,36 @@ const getSpecificUserBlogpost = (req, res) => {
 
 const updateBlogPost = (req, res) => {
 
-    var blogid = req.params.blogid;
-    var { title, content } = req.body;
-    var updatetime = new Date();
+    let blogid = req.params.blogid;
 
-    var query = "UPDATE tbl_blog SET title = ?, content = ?, updatetime = ? WHERE blogid = ?";
+    const userid = req.userid;
 
-    db.query(query, [title, content, updatetime, blogid], (err, result) => {
-        if (!err) {
-            res.status(200).json({
-                success: "Post was updated",
-                result
-            });
-        }
-        else {
-            console.log(err);
-        }
+    let { title, content } = req.body;
+    let updatetime = new Date();
+
+    query = "SELECT * FROM tbl_blog WHERE blogid = ?";
+    db.query(query, [blogid], (err, result) => {
+
+            if(userid == result[0].userid){
+
+                var query = "UPDATE tbl_blog SET title = ?, content = ?, updatetime = ? WHERE blogid = ?";
+                db.query(query, [title, content, updatetime, blogid], (err, result) => {
+                    if (!err) {
+                        res.status(200).json({
+                            success: "Post was updated",
+                            result
+                        });
+                    }
+                    else {
+                        console.log(err);
+                    }
+                });
+            }
+            else{
+                res.status(401).json({
+                    message: "Authentication Failed",
+                });
+            }
     });
 };
 

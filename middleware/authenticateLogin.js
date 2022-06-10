@@ -5,8 +5,9 @@ const checkLogin = (req, res, next) => {
     const { authorization } = req.headers;
     const jwtSecretKey = process.env.JWT_SECRET_KEY
 
-    try {
+    
 
+    try {
         const token = authorization.split(' ')[1];
         const data = jwt.verify(token, jwtSecretKey);
         const { username, userid } = data;
