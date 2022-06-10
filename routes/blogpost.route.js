@@ -1,25 +1,29 @@
 const express = require("express");
 
-const {getBlogPostPage, postBlogPost, getAllBlogpost, getBlogpost, updateBlogPost, deleteBlogPost} = require("../controllers/blogpost.controller");
+const {getBlogPostPage, postBlogPost, getAllBlogpost, getBlogpost, updateBlogPost, deleteBlogPost, getSpecificUserBlogpost} = require("../controllers/blogpost.controller");
+const { checkLogin } = require("../middleware/authenticateLogin");
 
 const router = express.Router();
 
 // get blogpost page
-router.get("/blogpost", getBlogPostPage);
+router.get("/post/blogpost", checkLogin ,getBlogPostPage);
 
 // create news
-router.post("/blogpost/:userid", postBlogPost);
+router.post("/blogpost", checkLogin, postBlogPost);
 
 // news from everyone
-router.get("/allblogpost", getAllBlogpost);
+router.get("/allblogpost", checkLogin, getAllBlogpost);
 
-// news from specific user and user himself
-router.get("/blogpost/:username", getBlogpost);
+// news from user himself
+router.get("/blogpost", checkLogin, getBlogpost);
+
+// news from specific user
+router.get("/blogpost/:username", checkLogin, getSpecificUserBlogpost);
 
 // update news
-router.put("/blogpost/:blogid", updateBlogPost);
+router.put("/blogpost/:blogid", checkLogin, updateBlogPost);
 
 // delete news
-router.delete("/blogpost/:blogid", deleteBlogPost);
+router.delete("/blogpost/:blogid", checkLogin, deleteBlogPost);
 
 module.exports = router;

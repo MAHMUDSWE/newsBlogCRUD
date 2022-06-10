@@ -8,7 +8,7 @@ const getBlogPostPage = (req, res) =>{
 
 const postBlogPost = (req, res) => {
     var blogid = uuidv4();
-    var userid = req.params.userid;
+    var userid = req.userid;
     var { title, content } = req.body;
     var status = "published";
     var createtime = new Date();
@@ -31,7 +31,7 @@ const postBlogPost = (req, res) => {
 
 const getAllBlogpost = (req, res) => {
 
-    var query = "SELECT title, content FROM tbl_blog";
+    var query = "SELECT name, title, content FROM tbl_blog NATURAL JOIN tbl_user";
 
     db.query(query, (err, rows, fields) => {
         if (!err) {
@@ -48,9 +48,9 @@ const getAllBlogpost = (req, res) => {
 
 const getBlogpost = (req, res) => {
 
-    var username = req.params.username;
+    let username = req.username;
 
-    var query = "SELECT title, content FROM tbl_blog NATURAL JOIN tbl_user WHERE tbl_user.username = ?";
+    var query = "SELECT title, content FROM tbl_blog NATURAL JOIN tbl_user WHERE username = ?";
 
     db.query(query, [username], (err, rows, fields) => {
         if (!err) {
@@ -64,6 +64,26 @@ const getBlogpost = (req, res) => {
         }
     });
 };
+
+const getSpecificUserBlogpost = (req, res) => {
+
+    let username = req.params.username;
+
+    var query = "SELECT title, content FROM tbl_blog NATURAL JOIN tbl_user WHERE username = ?";
+
+    db.query(query, [username], (err, rows, fields) => {
+        if (!err) {
+            res.status(200).json({
+                success: `Blogpost from ${username}`,
+                rows,
+            });
+        }
+        else {
+            console.log(err);
+        }
+    });
+};
+
 
 const updateBlogPost = (req, res) => {
 
@@ -105,5 +125,5 @@ const deleteBlogPost = (req, res) => {
     });
 };
 
-module.exports = {getBlogPostPage, postBlogPost, getAllBlogpost, getBlogpost, updateBlogPost, deleteBlogPost};
+module.exports = {getBlogPostPage, postBlogPost, getAllBlogpost, getBlogpost, updateBlogPost, deleteBlogPost, getSpecificUserBlogpost};
 

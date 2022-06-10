@@ -1,5 +1,6 @@
 const db = require("../models/user.model");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const path = require("path");
 
 const getLogInPage = (req, res) => {
@@ -11,29 +12,40 @@ const postUserLogin = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    let query = "select password from tbl_user where username = ? ";
+    let query = "select * from tbl_user where username = ? ";
 
     db.query(query, [username], (err, results) => {
 
         if (results.length == 1) {
 
             hash = results[0].password;
+            userid = results[0].userid;
 
             bcrypt.compare(password, hash, (err, result) => {
 
-                if(err){
-                    console.log(err);
-                }
+                if (result == true) {
+                    // generate jwt
+                    let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-                else if (result == true) {
+                    let data = {
+                        username: username,
+                        userid: userid
+                    };
+                    let expiresIn = {
+                        expiresIn: "1h"
+                    };
+
+                    const token = jwt.sign(data, jwtSecretKey, expiresIn);
+
                     res.status(200).json({
-                        message: "log in Successful"
+                        "access_token": token,
+                        "message": "log in Successful"
                     });
                 }
 
                 else {
-                    res.status(300).json({
-                        message: "log in failed! Invalid username or password."
+                    res.status(401).json({
+                        "message": "log in failed! Invalid username or password."
                     });
                 }
 
@@ -41,7 +53,7 @@ const postUserLogin = (req, res) => {
         }
         else {
             res.status(401).json({
-                message: "log in failed! Invalid username or password."
+                "message": "log in failed! Invalid username or password."
             });
         }
     });

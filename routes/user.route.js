@@ -1,17 +1,17 @@
 const express = require("express");
 
-
-const { getHome, getProfile, getAllBlogpost, getBlogpost, updateBlogPost, deleteBlogPost, updateProfile } = require("../controllers/user.controller");
+const { getHome, getProfile, updateProfile } = require("../controllers/user.controller");
+const { checkLogin } = require("../middleware/authenticateLogin");
 
 const router = express();
 
 // get user home page
-router.get("/home", getHome);
+router.get("/home", checkLogin,  getHome);
 
 // get user profile page
-router.get("/Profile", getProfile);
+router.get("/Profile", checkLogin, getProfile);
 
 // update profile
-router.put("/updateProfile/:userid", updateProfile);
+router.put("/updateProfile", checkLogin, updateProfile);
 
 module.exports = router;
