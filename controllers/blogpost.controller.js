@@ -2,7 +2,7 @@ const db = require("../models/user.model");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 
-const getBlogPostPage = (req, res) =>{
+const getBlogPostPage = (req, res) => {
     res.sendFile(path.join(__dirname + ("/../views/blogpost.html")));
 };
 
@@ -100,47 +100,60 @@ const updateBlogPost = (req, res) => {
     query = "SELECT * FROM tbl_blog WHERE blogid = ?";
     db.query(query, [blogid], (err, result) => {
 
-            if(userid == result[0].userid){
+        if (userid == result[0].userid) {
 
-                var query = "UPDATE tbl_blog SET title = ?, content = ?, updatetime = ? WHERE blogid = ?";
-                db.query(query, [title, content, updatetime, blogid], (err, result) => {
-                    if (!err) {
-                        res.status(200).json({
-                            success: "Post was updated",
-                            result
-                        });
-                    }
-                    else {
-                        console.log(err);
-                    }
-                });
-            }
-            else{
-                res.status(401).json({
-                    message: "Authentication Failed",
-                });
-            }
+            var query = "UPDATE tbl_blog SET title = ?, content = ?, updatetime = ? WHERE blogid = ?";
+            db.query(query, [title, content, updatetime, blogid], (err, result) => {
+                if (!err) {
+                    res.status(200).json({
+                        success: "Post was updated",
+                        result
+                    });
+                }
+                else {
+                    console.log(err);
+                }
+            });
+        }
+        else {
+            res.status(401).json({
+                message: "Can not update. Authentication Failed!",
+            });
+        }
     });
 };
 
 const deleteBlogPost = (req, res) => {
 
     var blogid = req.params.blogid;
+    const userid = req.userid;
 
-    var query = "DELETE FROM tbl_blog WHERE blogid = ?";
-
+    query = "SELECT * FROM tbl_blog WHERE blogid = ?";
     db.query(query, [blogid], (err, result) => {
-        if (!err) {
-            res.status(200).json({
-                success: "Post was deleted",
-                result
+
+        if (userid == result[0].userid) {
+
+            var query = "DELETE FROM tbl_blog WHERE blogid = ?";
+
+            db.query(query, [blogid], (err, result) => {
+                if (!err) {
+                    res.status(200).json({
+                        success: "Post was deleted",
+                        result
+                    });
+                }
+                else {
+                    console.log(err);
+                }
             });
         }
         else {
-            console.log(err);
+            res.status(401).json({
+                message: "Can not delete. Authentication Failed!",
+            });
         }
     });
 };
 
-module.exports = {getBlogPostPage, postBlogPost, getAllBlogpost, getBlogpost, updateBlogPost, deleteBlogPost, getSpecificUserBlogpost};
+module.exports = { getBlogPostPage, postBlogPost, getAllBlogpost, getBlogpost, updateBlogPost, deleteBlogPost, getSpecificUserBlogpost };
 
