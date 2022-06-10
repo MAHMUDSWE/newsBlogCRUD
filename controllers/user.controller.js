@@ -14,13 +14,19 @@ const getProfile = (req, res) => {
 const updateProfile = async (req, res) => {
 
     try {
-        let userid = req.params.userid;
+
+        let userid = req.userid;
+
+        let password = req.body.password;
+
+        if (password != undefined) {
+            password = await bcrypt.hash(req.body.password, 10);
+        }
+
         let { name, email, username } = req.body;
-    
-        const password = await bcrypt.hash(req.body.password, 10);
-    
+
         function check(callback) {
-    
+
             db.query("select * from tbl_user where userid = ?", [userid], (err, rows, fields) => {
                 if (!err) {
                     if (name == undefined) {
@@ -42,14 +48,15 @@ const updateProfile = async (req, res) => {
                 }
             });
         };
-    
+
         if (name != undefined && email != undefined && password != undefined && username != undefined) {
             callback();
         }
         else {
+
             check(callback);
         }
-    
+
         function callback() {
             var query = "UPDATE tbl_user SET name = ?, email = ?, username = ?, password = ? WHERE userid = ?";
             db.query(query, [name, email, username, password, userid], (err, result) => {

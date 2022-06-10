@@ -100,13 +100,18 @@ const updateBlogPost = (req, res) => {
     query = "SELECT * FROM tbl_blog WHERE blogid = ?";
     db.query(query, [blogid], (err, result) => {
 
-        if (userid == result[0].userid) {
+        if (result.length == 0) {
+            res.status(404).json({
+                "message": "blog not found",
+            });
+        }
+        else if (userid == result[0].userid) {
 
             var query = "UPDATE tbl_blog SET title = ?, content = ?, updatetime = ? WHERE blogid = ?";
             db.query(query, [title, content, updatetime, blogid], (err, result) => {
                 if (!err) {
                     res.status(200).json({
-                        success: "Post was updated",
+                        "success": "Post was updated",
                         result
                     });
                 }
@@ -117,7 +122,7 @@ const updateBlogPost = (req, res) => {
         }
         else {
             res.status(401).json({
-                message: "Can not update. Authentication Failed!",
+                "message": "Can not update. Authentication Failed!",
             });
         }
     });
@@ -131,7 +136,14 @@ const deleteBlogPost = (req, res) => {
     query = "SELECT * FROM tbl_blog WHERE blogid = ?";
     db.query(query, [blogid], (err, result) => {
 
-        if (userid == result[0].userid) {
+
+        if (result.length == 0) {
+            res.status(404).json({
+                "message": "blog not found",
+            });
+        }
+
+        else if (userid == result[0].userid) {
 
             var query = "DELETE FROM tbl_blog WHERE blogid = ?";
 
