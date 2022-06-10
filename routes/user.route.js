@@ -1,7 +1,7 @@
 const express = require("express");
 
 const { getHome, getProfile, updateProfile } = require("../controllers/user.controller");
-const { checkLogin } = require("../middleware/authenticateLogin");
+const { checkLogin } = require("../middleware/authenticateLogin.middleware");
 
 const router = express();
 

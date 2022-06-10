@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 
-const homeRoute = require("./routes/index.route");
+const indexRoute = require("./routes/index.route");
 const signUpRoute = require("./routes/signUp.route");
 const logInRoute = require("./routes/logIn.route");
 const userRoute = require("./routes/user.route");
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-app.use(homeRoute);
+app.use(indexRoute);
 app.use(signUpRoute);
 app.use(logInRoute);
 app.use(userRoute);
