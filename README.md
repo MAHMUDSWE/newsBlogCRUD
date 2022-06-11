@@ -1,7 +1,7 @@
 # newsBlogCRUD
 CRUD operation with nodejs, expressjs and mysql 
 # Features
-1. All protected APIs is secured with JWT(Jason Web Token) token.
+1. All protected APIs is secured with JWT(Json Web Token) token.
 2. APIs includes
    1. View news from everyone, from a specific user and user himself
    2. Create news, update news and delete news
