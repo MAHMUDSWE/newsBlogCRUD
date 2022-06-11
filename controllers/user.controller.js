@@ -1,5 +1,6 @@
 const db = require("../models/user.model");
 const bcrypt = require("bcrypt");
+const { body, validationResult } = require("express-validator")
 
 const path = require("path");
 
@@ -13,7 +14,20 @@ const getProfile = (req, res) => {
 
 const updateProfile = async (req, res) => {
 
+
     try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            if (req.body.email == '@' || req.body.password == undefined || req.body.username == undefined) {
+                // console.log("continue");
+            } else {
+                return res.status(400).json({
+                    "message": "Enter email and password in correct format",
+                    // "errors": errors.array()
+                });
+            }
+        }
 
         let userid = req.userid;
 
@@ -32,7 +46,7 @@ const updateProfile = async (req, res) => {
                     if (name == undefined) {
                         name = rows[0].name;
                     }
-                    if (email == undefined) {
+                    if (email == '@' || email == undefined) {
                         email = rows[0].email;
                     }
                     if (password == undefined) {
@@ -67,7 +81,11 @@ const updateProfile = async (req, res) => {
                     });
                 }
                 else {
-                    console.log(err);
+                    res.status(200).json({
+                        "message": "Profile update failed",
+                        // err
+                    });
+                    // console.log(err);
                 }
             });
         };
