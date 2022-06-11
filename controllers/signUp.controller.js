@@ -1,6 +1,7 @@
 const db = require("../models/user.model");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const {body, validationResult} = require("express-validator")
 
 const path = require("path");
 
@@ -11,6 +12,15 @@ const getSignUpPage = (req, res) => {
 const postUserSignUp = async (req, res) => {
 
     try {
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                "message": "Enter email and password in correct format",
+                // "errors": errors.array()
+            });
+        }
 
         let { name, email, username } = req.body;
 

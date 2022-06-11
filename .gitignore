@@ -1,3 +1,4 @@
 node_modules
 .env
 newsblogcrud@mahmud.sql
+validator.middleware.js

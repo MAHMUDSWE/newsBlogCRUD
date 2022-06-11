@@ -2,12 +2,22 @@ const db = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const path = require("path");
+const { body, validationResult } = require("express-validator");
 
 const getLogInPage = (req, res) => {
     res.sendFile(path.join(__dirname + "/../views/login.html"));
 }
 
 const postUserLogin = (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            "message": "Invalid username or password",
+            // "errors": errors.array()
+        });
+    }
 
     const username = req.body.username;
     const password = req.body.password;

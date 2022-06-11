@@ -11,7 +11,7 @@ const checkLogin = (req, res, next) => {
         const { username, userid } = data;
 
         req.username = username;
-        req.userid = userid;
+        req.userid = userid;``
 
         next();
     } catch (error) {
