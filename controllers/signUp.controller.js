@@ -35,7 +35,7 @@ const postUserSignUp = async (req, res) => {
             db.query(query, [email], (err, results) => {
 
                 if (results.length == 1) {
-                    res.status(400).json({
+                    res.status(409).json({
                         message: `User with email ${email} is already registered`,
                     });
                 }
@@ -45,7 +45,7 @@ const postUserSignUp = async (req, res) => {
                     db.query(query, [username], (err, results) => {
 
                         if (results.length == 1) {
-                            res.status(400).json({
+                            res.status(409).json({
                                 message: `username ${username} is not available`,
                             });
                         }
@@ -64,7 +64,7 @@ const postUserSignUp = async (req, res) => {
             var query = "insert into tbl_user values (?, ?, ?, ?, ?)";
             db.query(query, [userid, name, email, username, password], (err, results) => {
                 if (!err) {
-                    res.status(200).json({
+                    res.status(201).json({
                         success: `Registration successful for ${name}`,
                         results
                     });
