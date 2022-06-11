@@ -35,7 +35,7 @@ const postUserSignUp = async (req, res) => {
             db.query(query, [email], (err, results) => {
 
                 if (results.length == 1) {
-                    res.status(300).json({
+                    res.status(400).json({
                         message: `User with email ${email} is already registered`,
                     });
                 }
@@ -45,7 +45,7 @@ const postUserSignUp = async (req, res) => {
                     db.query(query, [username], (err, results) => {
 
                         if (results.length == 1) {
-                            res.status(300).json({
+                            res.status(400).json({
                                 message: `username ${username} is not available`,
                             });
                         }
@@ -75,6 +75,9 @@ const postUserSignUp = async (req, res) => {
             });
         }
     } catch (error) {
+        res.status(400).json({
+            "message": "Registration failed!"
+        });
         console.log("Registration Failed \n Error: " + error);
     }
 

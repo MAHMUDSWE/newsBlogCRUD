@@ -3,7 +3,7 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 
 const getBlogPostPage = (req, res) => {
-    res.sendFile(path.join(__dirname + ("/../views/blogpost.html")));
+    res.status(200).sendFile(path.join(__dirname + ("/../views/blogpost.html")));
 };
 
 const postBlogPost = (req, res) => {
@@ -22,12 +22,16 @@ const postBlogPost = (req, res) => {
     db.query(query, [blogid, userid, title, content, status, createtime, updatetime], (err, result) => {
         if (!err) {
             res.status(200).json({
-                success: "Post was shared",
+                "success": "Post was shared.",
                 result
             });
         }
-        else {
-            console.log(err);
+        else {            
+            // console.log(err);
+            res.status(400).json({
+                "message": "Post share failed!",
+                err
+            });
         }
     });
 };
@@ -39,12 +43,16 @@ const getAllBlogpost = (req, res) => {
     db.query(query, (err, rows, fields) => {
         if (!err) {
             res.status(200).json({
-                success: "Blogpost from all",
+                "success": "Blogpost from all",
                 rows,
             });
         }
         else {
-            console.log(err);
+            // console.log(err);
+            res.status(400).json({
+                "message": "Request failed",
+                err,
+            });
         }
     });
 };
@@ -58,12 +66,16 @@ const getBlogpost = (req, res) => {
     db.query(query, [username], (err, rows, fields) => {
         if (!err) {
             res.status(200).json({
-                success: `Blogpost from ${username}`,
+                "success": `Blogpost from ${username}`,
                 rows,
             });
         }
         else {
-            console.log(err);
+            // console.log(err);
+            res.status(400).json({
+                "message": "Request failed",
+                err,
+            });
         }
     });
 };
@@ -82,7 +94,11 @@ const getSpecificUserBlogpost = (req, res) => {
             });
         }
         else {
-            console.log(err);
+            // console.log(err);
+            res.status(400).json({
+                "message": "Request failed",
+                err,
+            });
         }
     });
 };

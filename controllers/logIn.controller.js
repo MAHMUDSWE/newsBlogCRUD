@@ -5,7 +5,7 @@ const path = require("path");
 const { body, validationResult } = require("express-validator");
 
 const getLogInPage = (req, res) => {
-    res.sendFile(path.join(__dirname + "/../views/login.html"));
+    res.status(200).sendFile(path.join(__dirname + "/../views/login.html"));
 }
 
 const postUserLogin = (req, res) => {
@@ -13,7 +13,7 @@ const postUserLogin = (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.status(400).json({
+        return res.status(401).json({
             "message": "Invalid username or password",
             // "errors": errors.array()
         });
