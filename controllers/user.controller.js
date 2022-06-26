@@ -5,6 +5,7 @@ const { body, validationResult } = require("express-validator")
 const path = require("path");
 
 const getHome = (req, res) => {
+    
     res.sendFile(path.join(__dirname + "/../views/home.html"));
 };
 
