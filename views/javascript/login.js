@@ -1,4 +1,3 @@
-
 const myForm = document.getElementById("form");
 
 var myUsername = myForm.querySelector("div #username");
@@ -26,11 +25,20 @@ function formHandler(e) {
     }
 
     var fetchRes = fetch(
-        "http://localhost:4000/userLogin", options);
+        "/userLogin", options);
     fetchRes.then(response => response.json())
         .then(data => {
             console.log(data.message);
-            localStorage.setItem("access_token", data.access_token);
+            localStorage.setItem("access_token", data.access_token);           
+
+            // location.assign("/home");
+            var xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.open( "GET", "/home", false ); // false for synchronous request
+            xmlHttp.setRequestHeader("authorization", "Bearer " + data.access_token);
+            
+            xmlHttp.send();
+            
         });
 
     myForm.querySelector("div #reset").click();
