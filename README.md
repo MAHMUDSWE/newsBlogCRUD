@@ -10,3 +10,6 @@ CRUD operation with nodejs, expressjs and mysql
 4. Server side validation with express-validator
 
 # All protected APIs can be tested using postman 
+
+# This backend is integrated with Project NewsBlog_Frontend
+https://github.com/MAHMUDSWE/NewsBlog_Frontend
