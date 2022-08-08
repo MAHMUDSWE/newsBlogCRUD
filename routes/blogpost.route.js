@@ -13,13 +13,13 @@ router.get("/post/blogpost", checkLogin ,getBlogPostPage);
 router.post("/blogpost", checkLogin, postBlogPost);
 
 // news from everyone
-router.get("/allblogpost", checkLogin, CheckCache(15), getAllBlogpost);
+router.get("/allblogpost", checkLogin, CheckCache(5), getAllBlogpost);
 
 // news from user himself
-router.get("/blogpost", checkLogin, CheckCache(15), getBlogpost);
+router.get("/blogpost", checkLogin, CheckCache(5), getBlogpost);
 
 // news from specific user
-router.get("/blogpost/:username", checkLogin, CheckCache(15),getSpecificUserBlogpost);
+router.get("/blogpost/:username", checkLogin, CheckCache(5),getSpecificUserBlogpost);
 
 // update news
 router.put("/blogpost", checkLogin, updateBlogPost);

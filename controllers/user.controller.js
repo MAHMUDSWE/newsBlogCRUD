@@ -15,6 +15,29 @@ const getProfile = (req, res) => {
     res.sendFile(path.join(__dirname + "/../views/profile.html"));
 };
 
+const getProfileDetails = (req, res) => {
+
+    let username = req.username;
+
+    var query = "SELECT userid, name, email, COUNT(blogid) AS 'totalBlogs' FROM tbl_blog NATURAL JOIN tbl_user WHERE username = ?";
+
+    db.query(query, [username], (err, rows, fields) => {
+        if (!err) {
+            res.status(200).json({
+                "success": `Blogpost from ${username}`,
+                rows,
+            });
+        }
+        else {
+            // console.log(err);
+            res.status(400).json({
+                "message": "Request failed",
+                err,
+            });
+        }
+    });
+};
+
 const updateProfile = async (req, res) => {
 
 
@@ -98,4 +121,4 @@ const updateProfile = async (req, res) => {
 
 };
 
-module.exports = { getHome, getProfile, updateProfile };
+module.exports = { getHome, getProfile, updateProfile, getProfileDetails};
