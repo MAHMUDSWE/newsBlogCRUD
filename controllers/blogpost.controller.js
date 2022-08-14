@@ -38,7 +38,7 @@ const postBlogPost = (req, res) => {
 
 const getAllBlogpost = (req, res) => {
 
-    var query = "SELECT name, title, content FROM tbl_blog NATURAL JOIN tbl_user";
+    var query = "SELECT name, title, content, DATE_FORMAT(createtime,'%d-%m-%Y') AS createtime FROM tbl_blog NATURAL JOIN tbl_user";
 
     db.query(query, (err, rows, fields) => {
         if (!err) {
@@ -61,7 +61,7 @@ const getBlogpost = (req, res) => {
 
     let username = req.username;
 
-    var query = "SELECT blogid, title, content FROM tbl_blog NATURAL JOIN tbl_user WHERE username = ?";
+    var query = "SELECT blogid, title, content, DATE_FORMAT(createtime,'%d-%m-%Y') AS createtime FROM tbl_blog NATURAL JOIN tbl_user WHERE username = ?";
 
     db.query(query, [username], (err, rows, fields) => {
         if (!err) {

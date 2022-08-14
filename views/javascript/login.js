@@ -31,7 +31,6 @@ function formHandler(e) {
         .then(data => {
             console.log(data.message);
             localStorage.setItem("access_token", data.access_token);
-
         });
 
     myForm.querySelector("div #reset").click();
